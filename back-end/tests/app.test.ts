@@ -4,6 +4,7 @@ import supertest from "supertest"
 import app from "./../src/app.js"
 import { prisma } from "./../src/database.js"
 import { deleteAllData } from "./factories/scenarioFactory.js"
+import * as recommendationFactory from "./factories/recommendationFactory.js"
 import { CreateRecommendationData } from "../src/services/recommendationsService.js"
 
 beforeEach(async () => {
@@ -21,6 +22,14 @@ describe("recommendations tests", () => {
 
     const response = await agent.post("/recommendations").send(recommendation)
     expect(response.status).toBe(201)
+  })
+
+  it("given a recommendation with same name that other, receive 409", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    await recommendationFactory.createRecommendation(recommendation)
+
+    const response = await agent.post("/recommendations").send(recommendation)
+    expect(response.status).toBe(409)
   })
 })
 
