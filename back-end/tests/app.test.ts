@@ -31,6 +31,16 @@ describe("recommendations tests", () => {
     const response = await agent.post("/recommendations").send(recommendation)
     expect(response.status).toBe(409)
   })
+
+  it("given a link that is not from youtube, receive 422", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+
+    const response = await agent.post("/recommendations").send({
+      ...recommendation,
+      youtubeLink: "https://www.google.com/",
+    })
+    expect(response.status).toBe(422)
+  })
 })
 
 afterAll(async () => {
