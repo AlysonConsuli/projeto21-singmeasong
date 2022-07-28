@@ -20,8 +20,6 @@ describe("app test", () => {
 
     cy.intercept("POST", "/recommendations").as("postRecommendation")
     cy.get("#createRecommendation").click()
-    cy.wait("@postRecommendation")
-      .its("request.body.name")
-      .should("eq", recommendation.name)
+    cy.wait("@postRecommendation").its("response.statusCode").should("eq", 201)
   })
 })
