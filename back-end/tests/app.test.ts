@@ -69,6 +69,20 @@ describe("recommendations tests", () => {
     )
     expect(recommendationSave.score).toBe(score - 1)
   })
+
+  it("given a id not registered, receive 404", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    const recommendationSave = await recommendationFactory.createRecommendation(
+      recommendation,
+    )
+    const wrongId = recommendationSave.id + faker.random.numeric(6)
+
+    let response = await agent.post(`/recommendations/${wrongId}/upvote`)
+    expect(response.statusCode).toBe(404)
+
+    response = await agent.post(`/recommendations/${wrongId}/downvote`)
+    expect(response.statusCode).toBe(404)
+  })
 })
 
 afterAll(async () => {
