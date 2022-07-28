@@ -41,7 +41,9 @@ describe("recommendations tests", () => {
     })
     expect(response.status).toBe(422)
   })
+})
 
+describe("recommendations upvote/downvote tests", () => {
   it("should increase score by 1", async () => {
     const recommendation = recommendationFactory.recommendationBody()
     let recommendationSave = await recommendationFactory.createRecommendation(
