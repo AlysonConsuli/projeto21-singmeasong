@@ -21,7 +21,7 @@ describe("app test", () => {
     cy.intercept("POST", "/recommendations").as("postRecommendation")
     cy.get("#createRecommendation").click()
     cy.wait("@postRecommendation")
-
-    cy.url().should("equal", `${URL}/`)
+      .its("request.body.name")
+      .should("eq", recommendation.name)
   })
 })
