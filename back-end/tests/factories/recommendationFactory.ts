@@ -14,7 +14,15 @@ export function recommendationBody() {
 export async function createRecommendation(
   recommendation: CreateRecommendationData,
 ) {
-  await prisma.recommendation.create({
+  const recommendationSave = await prisma.recommendation.create({
     data: recommendation,
   })
+  return recommendationSave
+}
+
+export async function getRecommendationByName(name: string) {
+  const recommendation = await prisma.recommendation.findFirst({
+    where: { name },
+  })
+  return recommendation
 }
