@@ -55,6 +55,20 @@ describe("recommendations tests", () => {
     )
     expect(recommendationSave.score).toBe(score + 1)
   })
+
+  it("should decrease score by 1", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    let recommendationSave = await recommendationFactory.createRecommendation(
+      recommendation,
+    )
+    const { id, score } = recommendationSave
+
+    const response = await agent.post(`/recommendations/${id}/downvote`)
+    recommendationSave = await recommendationFactory.getRecommendationByName(
+      recommendation.name,
+    )
+    expect(recommendationSave.score).toBe(score - 1)
+  })
 })
 
 afterAll(async () => {
