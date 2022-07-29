@@ -81,4 +81,12 @@ describe("recommendationService test suite", () => {
     const recommendations = await recommendationService.get()
     expect(recommendations).toEqual([recommendation])
   })
+
+  it("should get recommendations by score", async () => {
+    jest
+      .spyOn(recommendationRepository, "getAmountByScore")
+      .mockResolvedValueOnce([recommendation])
+    const recommendations = await recommendationService.getTop(1)
+    expect(recommendations).toEqual([recommendation])
+  })
 })
