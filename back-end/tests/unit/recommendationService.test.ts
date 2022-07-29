@@ -30,6 +30,15 @@ describe("recommendationService test suite", () => {
     })
   })
 
+  it("given a recommendation id that doesnt exist, return not found error", async () => {
+    jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(null)
+    const promise = recommendationService.getById(id)
+    expect(promise).rejects.toEqual({
+      type: "not_found",
+      message: "",
+    })
+  })
+
   it("should upvote recommendation", async () => {
     jest
       .spyOn(recommendationRepository, "find")
