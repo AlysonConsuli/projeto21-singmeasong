@@ -12,9 +12,7 @@ describe("recommendationService test suite", () => {
     jest
       .spyOn(recommendationRepository, "findByName")
       .mockResolvedValueOnce(null)
-    jest
-      .spyOn(recommendationRepository, "create")
-      .mockResolvedValueOnce(recommendation as any)
+    jest.spyOn(recommendationRepository, "create").mockResolvedValueOnce(null)
     await recommendationService.insert(recommendation)
     expect(recommendationRepository.create).toBeCalled()
   })
@@ -49,5 +47,30 @@ describe("recommendationService test suite", () => {
     })
     await recommendationService.upvote(id)
     expect(recommendationRepository.updateScore).toBeCalled()
+  })
+
+  it("should downvote recommendation", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockResolvedValueOnce(recommendation)
+    jest.spyOn(recommendationRepository, "updateScore").mockResolvedValueOnce({
+      ...recommendation,
+      score: score - 1,
+    })
+    await recommendationService.downvote(id)
+    expect(recommendationRepository.updateScore).toBeCalled()
+  })
+
+  it("should remove recommendation", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockResolvedValueOnce(recommendation)
+    jest.spyOn(recommendationRepository, "updateScore").mockResolvedValueOnce({
+      ...recommendation,
+      score: score - 6,
+    })
+    jest.spyOn(recommendationRepository, "remove").mockResolvedValueOnce(null)
+    await recommendationService.downvote(id)
+    expect(recommendationRepository.remove).toBeCalled()
   })
 })
