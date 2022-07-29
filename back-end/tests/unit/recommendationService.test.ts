@@ -115,4 +115,11 @@ describe("recommendationService test suite", () => {
     await recommendationService.deleteAll()
     expect(recommendationRepository.deleteAll).toBeCalled()
   })
+
+  it("getScoreFilter should return gt or lte", () => {
+    let scoreFilter = recommendationService.getScoreFilter(0.8)
+    expect(scoreFilter).toBe("lte")
+    scoreFilter = recommendationService.getScoreFilter(0.6)
+    expect(scoreFilter).toBe("gt")
+  })
 })
