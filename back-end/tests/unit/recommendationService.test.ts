@@ -89,4 +89,22 @@ describe("recommendationService test suite", () => {
     const recommendations = await recommendationService.getTop(1)
     expect(recommendations).toEqual([recommendation])
   })
+
+  it("should get random recommendation", async () => {
+    jest
+      .spyOn(recommendationRepository, "findAll")
+      .mockResolvedValueOnce([recommendation])
+    const randomRecommendation = await recommendationService.getRandom()
+    expect(randomRecommendation).toEqual(recommendation)
+  })
+
+  it("should return not found error if doesnt has recommendation", async () => {
+    jest.spyOn(recommendationRepository, "findAll").mockResolvedValueOnce([])
+    jest.spyOn(recommendationRepository, "findAll").mockResolvedValueOnce([])
+    const promise = recommendationService.getRandom()
+    expect(promise).rejects.toEqual({
+      type: "not_found",
+      message: "",
+    })
+  })
 })
