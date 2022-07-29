@@ -73,4 +73,12 @@ describe("recommendationService test suite", () => {
     await recommendationService.downvote(id)
     expect(recommendationRepository.remove).toBeCalled()
   })
+
+  it("should get all recommendations", async () => {
+    jest
+      .spyOn(recommendationRepository, "findAll")
+      .mockResolvedValueOnce([recommendation])
+    const recommendations = await recommendationService.get()
+    expect(recommendations).toEqual([recommendation])
+  })
 })
