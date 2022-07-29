@@ -107,4 +107,12 @@ describe("recommendationService test suite", () => {
       message: "",
     })
   })
+
+  it("should delete all recommendations", async () => {
+    jest
+      .spyOn(recommendationRepository, "deleteAll")
+      .mockResolvedValueOnce(null)
+    await recommendationService.deleteAll()
+    expect(recommendationRepository.deleteAll).toBeCalled()
+  })
 })
