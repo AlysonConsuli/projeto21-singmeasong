@@ -60,4 +60,19 @@ describe("post recommendations upvote/downvote tests", () => {
       })
     })
   })
+
+  it("should downvote by 1", () => {
+    cy.createRecommendation(recommendation)
+    cy.getRecommendation().then((res) => {
+      cy.visit(`${URL}/`)
+
+      cy.intercept("POST", `/recommendations/${res.id}/downvote`).as("downvote")
+      cy.get("article").find("div:last-child").find("svg:last-child").click()
+      cy.wait("@downvote").its("response.statusCode").should("eq", 200)
+
+      cy.getRecommendation().then((res2) => {
+        expect(res2.score).equal(res.score - 1)
+      })
+    })
+  })
 })
