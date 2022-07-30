@@ -75,4 +75,25 @@ describe("post recommendations upvote/downvote tests", () => {
       })
     })
   })
+
+  it("should remove recommendation", () => {
+    cy.createRecommendation(recommendation)
+    cy.getRecommendation().then((res) => {
+      cy.visit(`${URL}/`)
+      cy.intercept("POST", `/recommendations/${res.id}/downvote`).as("downvote")
+      for (let i = 0; i < 5; i++) {
+        cy.get("article").find("div:last-child").find("svg:last-child").click()
+      }
+      cy.wait("@downvote").its("response.statusCode").should("eq", 200)
+
+      cy.intercept("POST", `/recommendations/${res.id}/downvote`).as("remove")
+      cy.get("article").find("div:last-child").find("svg:last-child").click()
+      cy.wait("@remove").its("response.statusCode").should("eq", 200)
+
+      cy.get("div").should(
+        "contain",
+        "No recommendations yet! Create your own :)",
+      )
+    })
+  })
 })
