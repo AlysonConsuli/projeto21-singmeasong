@@ -27,9 +27,3 @@ Cypress.Commands.add("createManyRecommendations", (qty, recommendation) => {
     })
   }
 })
-
-Cypress.Commands.add("getRecommendations", () => {
-  cy.request("GET", "http://localhost:5000/recommendations").then((res) => {
-    return res.body
-  })
-})
