@@ -130,6 +130,22 @@ describe("get recommendations tests", () => {
     const response = await agent.get(`/recommendations/${wrongId}`)
     expect(response.statusCode).toBe(404)
   })
+
+  it("should return a random recommendation", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    await recommendationFactory.createManyRecommendations(3, recommendation)
+
+    const response = await agent.get(`/recommendations/random`)
+    expect(response.body).toHaveProperty("id")
+    expect(response.body).toHaveProperty("name")
+    expect(response.body).toHaveProperty("youtubeLink")
+    expect(response.body).toHaveProperty("score")
+  })
+
+  it("should receive 404, if try get random recommendation, without having any registered", async () => {
+    const response = await agent.get(`/recommendations/random`)
+    expect(response.statusCode).toBe(404)
+  })
 })
 
 afterAll(async () => {
