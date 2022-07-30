@@ -98,6 +98,18 @@ describe("recommendations upvote/downvote tests", () => {
   })
 })
 
+describe("get recommendations tests", () => {
+  it("should return the last 10 recommendations", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    const { youtubeLink } = recommendation
+    await recommendationFactory.createManyRecommendations(11, recommendation)
+
+    const response = await agent.get(`/recommendations`)
+    expect(response.body.length).toEqual(10)
+    expect(response.body[0].youtubeLink).toEqual(youtubeLink)
+  })
+})
+
 afterAll(async () => {
   await prisma.$disconnect()
 })

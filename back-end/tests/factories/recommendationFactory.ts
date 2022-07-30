@@ -34,3 +34,17 @@ export async function updateRecommendationScore(id: number, newScore: number) {
   })
   return recommendation
 }
+
+export async function createManyRecommendations(
+  qty: number,
+  recommendation: CreateRecommendationData,
+) {
+  for (let i = 0; i < qty; i++) {
+    await prisma.recommendation.create({
+      data: {
+        ...recommendation,
+        name: `${recommendation.name} ${i}`,
+      },
+    })
+  }
+}
