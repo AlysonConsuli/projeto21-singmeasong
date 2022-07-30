@@ -102,7 +102,11 @@ describe("get recommendations tests", () => {
   it("should return the last 10 recommendations", async () => {
     const recommendation = recommendationFactory.recommendationBody()
     const { youtubeLink } = recommendation
-    await recommendationFactory.createManyRecommendations(11, recommendation)
+    const recommendationsQty = +faker.random.numeric(1) + 10
+    await recommendationFactory.createManyRecommendations(
+      recommendationsQty,
+      recommendation,
+    )
 
     const response = await agent.get(`/recommendations`)
     expect(response.body.length).toEqual(10)
@@ -133,7 +137,11 @@ describe("get recommendations tests", () => {
 
   it("should return a random recommendation", async () => {
     const recommendation = recommendationFactory.recommendationBody()
-    await recommendationFactory.createManyRecommendations(3, recommendation)
+    const recommendationsQty = +faker.random.numeric(1)
+    await recommendationFactory.createManyRecommendations(
+      recommendationsQty,
+      recommendation,
+    )
 
     const response = await agent.get(`/recommendations/random`)
     expect(response.body).toHaveProperty("id")
