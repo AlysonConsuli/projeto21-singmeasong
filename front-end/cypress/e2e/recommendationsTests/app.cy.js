@@ -97,3 +97,20 @@ describe("post recommendations upvote/downvote tests", () => {
     })
   })
 })
+
+describe("get recommendations tests", () => {
+  it("should return the last 10 recommendations", () => {
+    const recommendationsQty = +faker.random.numeric(1) + 10
+    const lastRecommendationName = `${recommendation.name} ${
+      recommendationsQty - 1
+    }`
+    cy.createManyRecommendations(recommendationsQty, recommendation)
+    cy.getRecommendations().then((res) => {
+      cy.visit(`${URL}/`)
+      expect(res.length).equal(10)
+      cy.get("article")
+        .find("div:first-child")
+        .should("contain", lastRecommendationName)
+    })
+  })
+})
