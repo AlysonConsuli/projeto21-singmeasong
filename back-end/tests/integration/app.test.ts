@@ -13,7 +13,7 @@ beforeEach(async () => {
 
 const agent = supertest(app)
 
-describe("recommendations tests", () => {
+describe("post recommendations tests", () => {
   it("should create recommendation", async () => {
     const recommendation: CreateRecommendationData = {
       name: faker.music.songName(),
@@ -43,7 +43,7 @@ describe("recommendations tests", () => {
   })
 })
 
-describe("recommendations upvote/downvote tests", () => {
+describe("post recommendations upvote/downvote tests", () => {
   it("should increase score by 1", async () => {
     const recommendation = recommendationFactory.recommendationBody()
     let recommendationSave = await recommendationFactory.createRecommendation(
@@ -107,6 +107,28 @@ describe("get recommendations tests", () => {
     const response = await agent.get(`/recommendations`)
     expect(response.body.length).toEqual(10)
     expect(response.body[0].youtubeLink).toEqual(youtubeLink)
+  })
+
+  it("should return recommendation by id", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    let recommendationSave = await recommendationFactory.createRecommendation(
+      recommendation,
+    )
+    const { id } = recommendationSave
+
+    const response = await agent.get(`/recommendations/${id}`)
+    expect(response.body).toEqual(recommendationSave)
+  })
+
+  it("given a recommendation id that doesnt exist, receive 404", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    let recommendationSave = await recommendationFactory.createRecommendation(
+      recommendation,
+    )
+    const wrongId = recommendationSave.id + faker.random.numeric(6)
+
+    const response = await agent.get(`/recommendations/${wrongId}`)
+    expect(response.statusCode).toBe(404)
   })
 })
 
