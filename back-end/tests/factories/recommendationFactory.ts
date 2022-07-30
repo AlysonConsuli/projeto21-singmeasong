@@ -48,3 +48,18 @@ export async function createManyRecommendations(
     })
   }
 }
+
+export async function createManyRecommendationsWithScore(
+  qty: number,
+  recommendation: CreateRecommendationData,
+) {
+  for (let i = 0; i < qty; i++) {
+    await prisma.recommendation.create({
+      data: {
+        ...recommendation,
+        name: `${recommendation.name} ${i}`,
+        score: +faker.random.numeric(2),
+      },
+    })
+  }
+}

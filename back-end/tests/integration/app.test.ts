@@ -146,6 +146,24 @@ describe("get recommendations tests", () => {
     const response = await agent.get(`/recommendations/random`)
     expect(response.statusCode).toBe(404)
   })
+
+  it("should return amount recommendations order by score", async () => {
+    const amount = +faker.random.numeric(1)
+    const recommendation = recommendationFactory.recommendationBody()
+    const recommendationsQty = amount + +faker.random.numeric(1)
+    await recommendationFactory.createManyRecommendationsWithScore(
+      recommendationsQty,
+      recommendation,
+    )
+
+    const response = await agent.get(`/recommendations/top/${amount}`)
+    expect(response.body.length).toEqual(amount)
+    for (let i = 0; i < amount - 1; i++) {
+      expect(response.body[i].score).toBeGreaterThanOrEqual(
+        response.body[i + 1].score,
+      )
+    }
+  })
 })
 
 afterAll(async () => {
