@@ -52,9 +52,7 @@ describe("recommendations upvote/downvote tests", () => {
     const { id, score } = recommendationSave
 
     const response = await agent.post(`/recommendations/${id}/upvote`)
-    recommendationSave = await recommendationFactory.getRecommendationByName(
-      recommendation.name,
-    )
+    recommendationSave = await recommendationFactory.getRecommendationById(id)
     expect(recommendationSave.score).toBe(score + 1)
   })
 
@@ -66,9 +64,7 @@ describe("recommendations upvote/downvote tests", () => {
     const { id, score } = recommendationSave
 
     const response = await agent.post(`/recommendations/${id}/downvote`)
-    recommendationSave = await recommendationFactory.getRecommendationByName(
-      recommendation.name,
-    )
+    recommendationSave = await recommendationFactory.getRecommendationById(id)
     expect(recommendationSave.score).toBe(score - 1)
   })
 
@@ -84,6 +80,21 @@ describe("recommendations upvote/downvote tests", () => {
 
     response = await agent.post(`/recommendations/${wrongId}/downvote`)
     expect(response.statusCode).toBe(404)
+  })
+
+  it("should remove recommendation", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+    let recommendationSave = await recommendationFactory.createRecommendation(
+      recommendation,
+    )
+    const { id } = recommendationSave
+    recommendationSave = await recommendationFactory.updateRecommendationScore(
+      id,
+      -5,
+    )
+    const response = await agent.post(`/recommendations/${id}/downvote`)
+    recommendationSave = await recommendationFactory.getRecommendationById(id)
+    expect(recommendationSave).toEqual(null)
   })
 })
 

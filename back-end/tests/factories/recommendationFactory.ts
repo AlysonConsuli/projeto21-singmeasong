@@ -20,9 +20,17 @@ export async function createRecommendation(
   return recommendationSave
 }
 
-export async function getRecommendationByName(name: string) {
+export async function getRecommendationById(id: number) {
   const recommendation = await prisma.recommendation.findFirst({
-    where: { name },
+    where: { id },
+  })
+  return recommendation
+}
+
+export async function updateRecommendationScore(id: number, newScore: number) {
+  const recommendation = await prisma.recommendation.update({
+    where: { id },
+    data: { score: { increment: newScore } },
   })
   return recommendation
 }
