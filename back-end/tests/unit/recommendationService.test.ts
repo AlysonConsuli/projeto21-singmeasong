@@ -90,7 +90,19 @@ describe("recommendationService test suite", () => {
     expect(recommendations).toEqual([recommendation])
   })
 
-  it("should get random recommendation", async () => {
+  it("should get random recommendation (30% scenario)", async () => {
+    const chance = 0.8
+    jest.spyOn(Math, "random").mockReturnValueOnce(chance)
+    jest
+      .spyOn(recommendationRepository, "findAll")
+      .mockResolvedValueOnce([recommendation])
+    const randomRecommendation = await recommendationService.getRandom()
+    expect(randomRecommendation).toEqual(recommendation)
+  })
+
+  it("should get random recommendation (70% scenario)", async () => {
+    const chance = 0.6
+    jest.spyOn(Math, "random").mockReturnValueOnce(chance)
     jest
       .spyOn(recommendationRepository, "findAll")
       .mockResolvedValueOnce([recommendation])
@@ -114,12 +126,5 @@ describe("recommendationService test suite", () => {
       .mockResolvedValueOnce(null)
     await recommendationService.deleteAll()
     expect(recommendationRepository.deleteAll).toBeCalled()
-  })
-
-  it("getScoreFilter should return gt or lte", () => {
-    let scoreFilter = recommendationService.getScoreFilter(0.8)
-    expect(scoreFilter).toBe("lte")
-    scoreFilter = recommendationService.getScoreFilter(0.6)
-    expect(scoreFilter).toBe("gt")
   })
 })
