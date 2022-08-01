@@ -41,6 +41,22 @@ describe("post recommendations tests", () => {
     })
     expect(response.status).toBe(422)
   })
+
+  it("not given a recommendation name or youtubeLink, receive 422", async () => {
+    const recommendation = recommendationFactory.recommendationBody()
+
+    let response = await agent.post("/recommendations").send({
+      ...recommendation,
+      name: "",
+    })
+    expect(response.status).toBe(422)
+
+    response = await agent.post("/recommendations").send({
+      ...recommendation,
+      youtubeLink: "",
+    })
+    expect(response.status).toBe(422)
+  })
 })
 
 describe("post recommendations upvote/downvote tests", () => {
