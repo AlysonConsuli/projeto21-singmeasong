@@ -43,6 +43,24 @@ describe("post recommendations tests", () => {
     cy.get("#createRecommendation").click()
     cy.wait("@postRecommendation").its("response.statusCode").should("eq", 422)
   })
+
+  it("not given a recommendation name, receive 422", () => {
+    cy.visit(`${URL}/`)
+    cy.get("#youtubeLink").type(recommendation.youtubeLink)
+
+    cy.intercept("POST", "/recommendations").as("postRecommendation")
+    cy.get("#createRecommendation").click()
+    cy.wait("@postRecommendation").its("response.statusCode").should("eq", 422)
+  })
+
+  it("not given a recommendation youtubeLink, receive 422", () => {
+    cy.visit(`${URL}/`)
+    cy.get("#name").type(recommendation.name)
+
+    cy.intercept("POST", "/recommendations").as("postRecommendation")
+    cy.get("#createRecommendation").click()
+    cy.wait("@postRecommendation").its("response.statusCode").should("eq", 422)
+  })
 })
 
 describe("post recommendations upvote/downvote tests", () => {
